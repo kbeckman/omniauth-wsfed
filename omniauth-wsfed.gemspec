@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rspec', '~> 2.10.0'
   gem.add_development_dependency 'rake', '~> 0.9.2'
+  gem.add_development_dependency 'rack-test', '~> 0.6.1'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

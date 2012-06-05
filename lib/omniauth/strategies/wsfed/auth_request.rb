@@ -2,7 +2,7 @@ require 'erb'
 
 module OmniAuth
   module Strategies
-    class WsFed
+    class WSFed
 
       class AuthRequest
         include ERB::Util

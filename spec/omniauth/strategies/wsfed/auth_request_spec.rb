@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'erb'
 
-describe OmniAuth::Strategies::WsFed::AuthRequest do
+describe OmniAuth::Strategies::WSFed::AuthRequest do
 
   context :create do
 
@@ -16,7 +16,7 @@ describe OmniAuth::Strategies::WsFed::AuthRequest do
     end
 
     let :request do
-      OmniAuth::Strategies::WsFed::AuthRequest.new.create(@omniauth_params)
+      OmniAuth::Strategies::WSFed::AuthRequest.new.create(@omniauth_params)
     end
 
     describe "WsFed Auth Request URL" do

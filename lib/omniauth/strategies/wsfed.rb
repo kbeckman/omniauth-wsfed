@@ -3,13 +3,13 @@ require 'omniauth'
 module OmniAuth
   module Strategies
 
-    class WsFed
+    class WSFed
       include OmniAuth::Strategy
 
       autoload :AuthRequest, 'omniauth/strategies/wsfed/auth_request'
 
       def request_phase
-        request = OmniAuth::Strategies::WsFed::AuthRequest.new
+        request = OmniAuth::Strategies::WSFed::AuthRequest.new
         redirect(request.create(options))
       end
 
