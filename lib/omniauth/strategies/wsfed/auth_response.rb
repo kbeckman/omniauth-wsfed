@@ -6,7 +6,7 @@ module OmniAuth
 
       class AuthResponse
 
-        ASSERTION = "urn:oasis:names:tc:SAML:2.0:assertion"
+        ASSERTION = "urn:oasis:names:tc:SAML:1.0:assertion"
         PROTOCOL  = "urn:oasis:names:tc:SAML:2.0:protocol"
         DSIG      = "http://www.w3.org/2000/09/xmldsig#"
 

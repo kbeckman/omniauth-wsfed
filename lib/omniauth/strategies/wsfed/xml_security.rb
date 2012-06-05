@@ -31,7 +31,7 @@ require "digest/sha1"
 
 module OmniAuth
   module Strategies
-    class SAML
+    class WSFed
 
       module XMLSecurity
 
