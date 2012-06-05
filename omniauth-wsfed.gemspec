@@ -2,16 +2,24 @@
 require File.expand_path('../lib/omniauth-wsfed/version', __FILE__)
 
 Gem::Specification.new do |gem|
+
+  gem.name          = "omniauth-wsfed"
+  gem.version       = OmniAuth::WSFed::VERSION
+  gem.description   = %q{A WS-Federation and WS-Trust strategy for OmniAuth.}
+  gem.summary       = %q{A WS-Federation and WS-Trust strategy for OmniAuth.}
+
   gem.authors       = ["kbeckman"]
   gem.email         = ["kbeckman.c4sc@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/kbeckman/omniauth-wsfed"
+
+  gem.add_runtime_dependency 'omniauth', '~> 1.1.0'
+
+  gem.add_development_dependency 'rspec', '~> 2.10.0'
+  gem.add_development_dependency 'rake', '~> 0.9.2'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "omniauth-wsfed"
   gem.require_paths = ["lib"]
-  gem.version       = Omniauth::Wsfed::VERSION
+
 end
