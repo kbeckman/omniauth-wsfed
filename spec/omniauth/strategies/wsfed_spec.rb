@@ -16,13 +16,14 @@ describe OmniAuth::Strategies::WSFed, :type => :strategy do
   let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_options] }
 
   describe 'GET /auth/wsfed' do
-    before do
+
+    it 'should redirect to the IdP issue URL for authentication' do
       get '/auth/wsfed'
+
+      last_response.should be_redirect
+      last_response.location.should include wsfed_options[:issuer]
     end
 
-    it 'should get authentication page' do
-      last_response.should be_redirect
-    end
   end
 
 end
