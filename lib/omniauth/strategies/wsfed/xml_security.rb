@@ -28,7 +28,7 @@ require "rexml/xpath"
 require "openssl"
 require "xmlcanonicalizer"
 require "digest/sha1"
-
+                                                                   l
 module OmniAuth
   module Strategies
     class WSFed
@@ -85,7 +85,8 @@ module OmniAuth
               canoner                       = XML::Util::XmlCanonicalizer.new(false, true)
               canoner.inclusive_namespaces  = inclusive_namespaces if canoner.respond_to?(:inclusive_namespaces) && !inclusive_namespaces.empty?
               canon_hashed_element          = canoner.canonicalize(hashed_element)
-              hash                          = Base64.encode64(Digest::SHA1.digest(canon_hashed_element)).chomp
+              hash                          = Base64.encode64(Digest::SHA256.digest(canon_hashed_element)).chomp
+              #hash                          = Base64.encode64(Digest::SHA1.digest(canon_hashed_element)).chomp
               digest_value                  = REXML::XPath.first(ref, "//ds:DigestValue", {"ds"=>"http://www.w3.org/2000/09/xmldsig#"}).text
 
               if hash != digest_value
@@ -105,7 +106,7 @@ module OmniAuth
             cert_text               = Base64.decode64(base64_cert)
             cert                    = OpenSSL::X509::Certificate.new(cert_text)
 
-            if !cert.public_key.verify(OpenSSL::Digest::SHA1.new, signature, canon_string)
+            if !cert.public_key.verify(OpenSSL::Digest::SHA256.new, signature, canon_string)
               return soft ? false : (raise OmniAuth::Strategies::WSFed::ValidationError.new("Key validation error"))
             end
 

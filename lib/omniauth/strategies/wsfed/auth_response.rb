@@ -16,7 +16,8 @@ module OmniAuth
           raise ArgumentError.new("Response cannot be nil") if response.nil?
           self.options  = options
           self.response = response
-          self.document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(Base64.decode64(response))
+
+          self.document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
         end
 
         def valid?
@@ -29,28 +30,32 @@ module OmniAuth
 
         # The value of the user identifier as designated by the initialization request response
         def name_id
-          @name_id ||= begin
-            node = xpath("/p:Response/a:Assertion[@ID='#{signed_element_id}']/a:Subject/a:NameID")
-            node ||=  xpath("/p:Response[@ID='#{signed_element_id}']/a:Assertion/a:Subject/a:NameID")
-            node.nil? ? nil : strip(node.text)
-          end
+          #TODO: Implement this...
+          @name_id ||= "kbeckman.c4sc@gmail.com"
+          #@name_id ||= begin
+          #  node = xpath("/p:Response/a:Assertion[@ID='#{signed_element_id}']/a:Subject/a:NameID")
+          #  node ||=  xpath("/p:Response[@ID='#{signed_element_id}']/a:Assertion/a:Subject/a:NameID")
+          #  node.nil? ? nil : strip(node.text)
+          #end
         end
 
         # A hash of all the attributes with the response. Assuming there is only one value for each key
         def attributes
-          @attr_statements ||= begin
-            stmt_element = xpath("/p:Response/a:Assertion/a:AttributeStatement")
-            return {} if stmt_element.nil?
-
-            {}.tap do |result|
-              stmt_element.elements.each do |attr_element|
-                name  = attr_element.attributes["Name"]
-                value = strip(attr_element.elements.first.text)
-
-                result[name] = result[name.to_sym] =  value
-              end
-            end
-          end
+          #TODO: Implement this to pull out all claims...
+          @attr_statement ||= { }
+          #@attr_statements ||= begin
+          #  stmt_element = xpath("/p:Response/a:Assertion/a:AttributeStatement")
+          #  return {} if stmt_element.nil?
+          #
+          #  {}.tap do |result|
+          #    stmt_element.elements.each do |attr_element|
+          #      name  = attr_element.attributes["Name"]
+          #      value = strip(attr_element.elements.first.text)
+          #
+          #      result[name] = result[name.to_sym] =  value
+          #    end
+          #  end
+          #end
         end
 
         # When this user session should expire at latest
@@ -97,12 +102,12 @@ module OmniAuth
         end
 
         def get_fingerprint
-          if settings.idp_cert
-            cert = OpenSSL::X509::Certificate.new(settings.idp_cert.gsub(/^ +/, ''))
-            Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
-          else
+          #if settings.idp_cert
+          #  cert = OpenSSL::X509::Certificate.new(settings.idp_cert.gsub(/^ +/, ''))
+          #  Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
+          #else
             settings.idp_cert_fingerprint
-          end
+          #end
         end
 
         def validate_conditions(soft = true)
@@ -136,7 +141,8 @@ module OmniAuth
         end
 
         def xpath(path)
-          REXML::XPath.first(document, path, { "p" => PROTOCOL, "a" => ASSERTION })
+          #REXML::XPath.first(document, path, { "p" => PROTOCOL, "a" => ASSERTION })
+          REXML::XPath.first(document, path, { "saml" => ASSERTION })
         end
 
         def signed_element_id
