@@ -28,7 +28,7 @@ require "rexml/xpath"
 require "openssl"
 require "xmlcanonicalizer"
 require "digest/sha1"
-                                                                   l
+
 module OmniAuth
   module Strategies
     class WSFed
