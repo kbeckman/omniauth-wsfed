@@ -11,12 +11,13 @@ module OmniAuth
       autoload :ValidationError,  'omniauth/strategies/wsfed/validation_error'
       autoload :XMLSecurity,      'omniauth/strategies/wsfed/xml_security'
 
-
+      #Issues WS-Federation redirect for authentication...
       def request_phase
         request = OmniAuth::Strategies::WSFed::AuthRequest.new
-        redirect(request.create(options))
+        redirect(request.create(options, :whr => @request.params['whr']))
       end
 
+      #Parse SAML token...
       def callback_phase
         begin
           response = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'])
