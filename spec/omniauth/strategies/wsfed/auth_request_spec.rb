@@ -10,7 +10,7 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
           issuer_name:  "My Organization's IdP",
           issuer:       "https://my.issuer.com/issue/wsfed",
           realm:        "http://my.organization/security_realm",
-          reply:        "http://my.relyingparty/callback",
+          reply:        "http://my.relyingparty/callback"
       }
     end
 
