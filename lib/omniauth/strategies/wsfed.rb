@@ -38,7 +38,7 @@ module OmniAuth
 
       info { @claims }
 
-      extra { { :wresult => response.document } }
+      extra { { :wresult => request.params['wresult'] } }
 
     end
   end
