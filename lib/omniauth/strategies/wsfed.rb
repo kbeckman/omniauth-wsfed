@@ -11,20 +11,20 @@ module OmniAuth
       autoload :ValidationError,  'omniauth/strategies/wsfed/validation_error'
       autoload :XMLSecurity,      'omniauth/strategies/wsfed/xml_security'
 
-      #Issues WS-Federation redirect for authentication...
+      # Issues passive WS-Federation redirect for authentication...
       def request_phase
         request = OmniAuth::Strategies::WSFed::AuthRequest.new
         redirect(request.create(options, :whr => @request.params['whr']))
       end
 
-      #Parse SAML token...
+      # Parse SAML token...
       def callback_phase
         begin
-          response = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'])
+          response          = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'])
           response.settings = options
 
           @name_id  = response.name_id
-          @attributes = response.attributes
+          @claims   = response.attributes
 
           return fail!(:invalid_ticket, 'Invalid SAML Token') if @name_id.nil? || @name_id.empty? || !response.valid?
           super
@@ -33,18 +33,12 @@ module OmniAuth
         end
       end
 
+      # OmniAuth DSL methods...
       uid { @name_id }
 
-      info do
-        {
-            :name  => @attributes[:name],
-            :email => @attributes[:email] || @attributes[:mail],
-            :first_name => @attributes[:first_name] || @attributes[:firstname],
-            :last_name => @attributes[:last_name] || @attributes[:lastname]
-        }
-      end
+      info { @claims }
 
-      extra { { :raw_info => @attributes } }
+      extra { { :wresult => response.document } }
 
     end
   end
