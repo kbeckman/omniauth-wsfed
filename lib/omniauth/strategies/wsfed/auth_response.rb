@@ -99,11 +99,11 @@ module OmniAuth
         end
 
         def get_fingerprint
-          if settings.idp_cert
+          if settings.idp_cert_fingerprint
+            settings.idp_cert_fingerprint
+          else
             cert = OpenSSL::X509::Certificate.new(settings.idp_cert.gsub(/^ +/, ''))
             Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
-          else
-            settings.idp_cert_fingerprint
           end
         end
 
