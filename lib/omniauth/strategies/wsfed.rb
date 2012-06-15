@@ -26,7 +26,7 @@ module OmniAuth
           @name_id  = response.name_id
           @claims   = response.attributes
 
-          return fail!(:invalid_ticket, 'Invalid SAML Token') if @name_id.nil? || @name_id.empty? || !response.valid?
+          return fail!(:invalid_ticket, 'Invalid SAML Token') if @claims.nil? || @claims.empty? || !response.valid?
           super
         rescue ArgumentError => e
           fail!(:invalid_ticket, 'Invalid WSFed Response')
