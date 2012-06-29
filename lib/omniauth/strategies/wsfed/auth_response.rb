@@ -13,7 +13,7 @@ module OmniAuth
         attr_accessor :options, :response, :document, :settings
 
         def initialize(response, options = {})
-          raise ArgumentError.new("Response cannot be nil") if response.nil?
+          raise ArgumentError.new("Response cannot be nil.") if response.nil?
 
           self.options  = options
           self.response = response
@@ -28,12 +28,10 @@ module OmniAuth
           validate(soft = false)
         end
 
-        # The value of the user identifier as designated by the initialization request response
+        # The value of the user identifier as defined by the id_claim setting...
         def name_id
-          #TODO - Support a "saml" XML namespace prefix...
           @name_id ||= begin
-            node = REXML::XPath.first(document, "//Assertion[@ID='#{signed_element_id}']/Subject/NameID")
-            node.nil? ? nil : strip(node.text)
+            attributes.has_key?(settings.id_claim) ? attributes.fetch(settings.id_claim) : nil
           end
         end
 
