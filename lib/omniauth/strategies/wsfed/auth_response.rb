@@ -12,11 +12,13 @@ module OmniAuth
 
         attr_accessor :options, :response, :document, :settings
 
-        def initialize(response, options = {})
+        def initialize(response, settings, options = {})
           raise ArgumentError.new("Response cannot be nil.") if response.nil?
+          raise ArgumentError.new("WSFed settings cannot be nil.") if settings.nil?
 
           self.options  = options
           self.response = response
+          self.settings = settings
           self.document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
         end
 

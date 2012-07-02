@@ -20,13 +20,12 @@ module OmniAuth
       # Parse SAML token...
       def callback_phase
         begin
-          response          = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'])
-          response.settings = options
+          response = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'], options)
 
           @name_id  = response.name_id
           @claims   = response.attributes
 
-          return fail!(:invalid_ticket, 'Invalid SAML Token') if @claims.nil? || @claims.empty? || !response.valid?
+          return fail!(:invalid_ticket, OmniAuth::Strategies::WSFed::ValidationError('Invalid SAML Token') ) if @claims.nil? || @claims.empty? || !response.valid?
           super
         rescue ArgumentError => e
           fail!(:invalid_ticket, 'Invalid WSFed Response')
