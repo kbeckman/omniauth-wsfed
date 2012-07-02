@@ -66,6 +66,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     :idp_cert_fingerprint  => "FC96D2983…"
 
 end
+```
 
 
 ## Configuration Options ##
