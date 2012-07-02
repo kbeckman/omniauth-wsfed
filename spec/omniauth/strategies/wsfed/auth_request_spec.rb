@@ -7,10 +7,10 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
 
     before(:each) do
       @omniauth_params = {
-          issuer_name:  "My Organization's IdP",
-          issuer:       "https://my.issuer.com/issue/wsfed",
-          realm:        "http://my.organization/security_realm",
-          reply:        "http://my.relyingparty/callback"
+          issuer_name:  "http://identity.c4sc.com/trust/",
+          issuer:       "https://identity.c4sc.com/issue/wsfed",
+          realm:        "http://rp.c4sc/security_realm",
+          reply:        "http://rp.c4sc/callback"
       }
     end
 

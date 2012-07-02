@@ -1,4 +1,5 @@
 require "time"
+require "hashie"
 
 module OmniAuth
   module Strategies
@@ -33,14 +34,13 @@ module OmniAuth
         # The value of the user identifier as defined by the id_claim setting...
         def name_id
           @name_id ||= begin
-            attributes.has_key?(settings.id_claim) ? attributes.fetch(settings.id_claim) : nil
+            attributes.has_key?(settings[:id_claim]) ? attributes.fetch(settings[:id_claim]) : nil
           end
         end
 
         # A hash of all the claims provided by the response.
         def attributes
           @attr_statements ||= begin
-            #TODO - Support a "saml" XML namespace prefix...
             stmt_element = REXML::XPath.first(document, "//Assertion/AttributeStatement")
             return {} if stmt_element.nil?
 
@@ -91,7 +91,7 @@ module OmniAuth
             return soft ? false : validation_error("No settings on response")
           end
 
-          if settings.idp_cert_fingerprint.nil? && settings.idp_cert.nil?
+          if settings[:idp_cert_fingerprint].nil? && settings[:idp_cert].nil?
             return soft ? false : validation_error("No fingerprint or certificate on settings")
           end
 
@@ -99,10 +99,10 @@ module OmniAuth
         end
 
         def get_fingerprint
-          if settings.idp_cert_fingerprint
-            settings.idp_cert_fingerprint
+          if settings[:idp_cert_fingerprint]
+            settings[:idp_cert_fingerprint]
           else
-            cert = OpenSSL::X509::Certificate.new(settings.idp_cert.gsub(/^ +/, ''))
+            cert = OpenSSL::X509::Certificate.new(settings[:idp_cert].gsub(/^ +/, ''))
             Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
           end
         end
