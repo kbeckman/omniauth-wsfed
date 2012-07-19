@@ -3,13 +3,16 @@ PATH
   specs:
     omniauth-wsfed (0.0.1)
       omniauth (~> 1.1.0)
+      typhoeus (~> 0.4.2)
       xmlcanonicalizer (= 0.1.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.1.3)
+    ffi (1.1.0)
     hashie (1.2.0)
+    mime-types (1.19)
     omniauth (1.1.0)
       hashie (~> 1.2)
       rack
@@ -25,6 +28,9 @@ GEM
     rspec-expectations (2.10.0)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.10.1)
+    typhoeus (0.4.2)
+      ffi (~> 1.0)
+      mime-types (~> 1.18)
     xmlcanonicalizer (0.1.1)
 
 PLATFORMS

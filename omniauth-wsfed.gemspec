@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'omniauth', '~> 1.1.0'
   gem.add_runtime_dependency 'xmlcanonicalizer', '0.1.1'
+  gem.add_runtime_dependency 'typhoeus', '~> 0.4.2'
 
   gem.add_development_dependency 'rspec', '~> 2.10.0'
   gem.add_development_dependency 'rake', '~> 0.9.2'
