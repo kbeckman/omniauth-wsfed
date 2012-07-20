@@ -5,22 +5,22 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
 
   context 'Valid Request' do
 
-    before(:each) do
-      @omniauth_params = {
-          issuer:       "https://c4sc.accesscontrol.windows.net.com/v2/wsfederation",
-          realm:        "http://c4sc.com/security_realm",
-          reply:        "http://rp.c4sc.com/auth/wsfed"
+    let(:wsfed_settings) do
+      {
+          issuer: "https://c4sc.accesscontrol.windows.net.com/v2/wsfederation",
+          realm:  "http://c4sc.com/security_realm",
+          reply:  "http://rp.c4sc.com/auth/wsfed"
       }
     end
 
     describe 'WsFed Auth Request URL' do
 
       let :request do
-        OmniAuth::Strategies::WSFed::AuthRequest.new.create(@omniauth_params)
+        OmniAuth::Strategies::WSFed::AuthRequest.new.create(wsfed_settings)
       end
 
       it 'should include the issuer URL followed by WsFed query string params' do
-        request.should start_with "#{@omniauth_params[:issuer]}?"
+        request.should start_with "#{wsfed_settings[:issuer]}?"
       end
 
       it 'should include the sign-in param [wa]' do
@@ -28,11 +28,11 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
       end
 
       it 'should include the url-encoded security realm param [wtrealm]' do
-        request.should include "wtrealm=#{ERB::Util::url_encode(@omniauth_params[:realm])}"
+        request.should include "wtrealm=#{ERB::Util::url_encode(wsfed_settings[:realm])}"
       end
 
       it 'should include the url-encoded reply param [wreply]' do
-        request.should include "wreply=#{ERB::Util::url_encode(@omniauth_params[:reply])}"
+        request.should include "wreply=#{ERB::Util::url_encode(wsfed_settings[:reply])}"
       end
 
       it 'should include an empty context param [wctx]' do
@@ -48,18 +48,16 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
 
       describe 'Url-Encoded Home Realm Parameter [whr]' do
 
-        before(:each) do
-          @home_realm = "http://identity.c4sc.com/trust"
-        end
+        let(:home_realm) { "http://identity.c4sc.com/trust" }
 
         it 'should include [whr] if provided in the options' do
-          request = OmniAuth::Strategies::WSFed::AuthRequest.new.create(@omniauth_params, :whr => @home_realm)
-          request.should include "whr=#{ERB::Util::url_encode(@home_realm)}"
+          request = OmniAuth::Strategies::WSFed::AuthRequest.new.create(wsfed_settings, :whr => home_realm)
+          request.should include "whr=#{ERB::Util::url_encode(home_realm)}"
         end
 
         it 'should exclude [whr] if ignored in the options' do
-          request = OmniAuth::Strategies::WSFed::AuthRequest.new.create(@omniauth_params, :whr => nil)
-          request.should_not include "whr=#{ERB::Util::url_encode(@home_realm)}"
+          request = OmniAuth::Strategies::WSFed::AuthRequest.new.create(wsfed_settings, :whr => nil)
+          request.should_not include "whr=#{ERB::Util::url_encode(home_realm)}"
           request.should_not include "whr="
         end
 
