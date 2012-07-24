@@ -13,8 +13,18 @@ module OmniAuth
 
       # Issues passive WS-Federation redirect for authentication...
       def request_phase
-        request = OmniAuth::Strategies::WSFed::AuthRequest.new
-        redirect(request.create(options, :whr => @request.params['whr']))
+        whr = @request.params['whr']
+
+        if !whr.nil?
+          request = OmniAuth::Strategies::WSFed::AuthRequest.new
+          redirect(request.create(options, :whr => whr))
+        elsif !options[:home_realm_discovery_path].nil?
+          redirect(options[:home_realm_discovery_path])
+        else
+          request = OmniAuth::Strategies::WSFed::AuthRequest.new
+          redirect(request.create(options))
+        end
+
       end
 
       # Parse SAML token...
