@@ -47,7 +47,13 @@ module OmniAuth
             {}.tap do |result|
               stmt_element.elements.each do |attr_element|
                 name  = attr_element.attributes["Name"]
-                value = strip(attr_element.elements.first.text)
+
+                if attr_element.elements.count > 1
+                  value = []
+                  attr_element.elements.each { |element| value << element.text }
+                else
+                  value = attr_element.elements.first.text.lstrip.rstrip
+                end
 
                 result[name] = value
               end
@@ -132,10 +138,10 @@ module OmniAuth
           end
         end
 
-        def strip(string)
-          return string unless string
-          string.gsub(/^\s+/, '').gsub(/\s+$/, '')
-        end
+        #def strip(string)
+        #  return string unless string
+        #  string.gsub(/^\s+/, '').gsub(/\s+$/, '')
+        #end
 
         def xpath(path)
           #REXML::XPath.first(document, path, { "p" => PROTOCOL, "a" => ASSERTION })
