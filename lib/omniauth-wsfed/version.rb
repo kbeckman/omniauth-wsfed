@@ -1,5 +1,5 @@
-module Omniauth
-  module Wsfed
-    VERSION = "0.0.1"
+module OmniAuth
+  module WSFed
+    VERSION = "0.1.0"
   end
 end
