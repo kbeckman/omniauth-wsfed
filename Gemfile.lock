@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omniauth-wsfed (0.0.1)
+    omniauth-wsfed (0.1.0)
       omniauth (~> 1.1.0)
       typhoeus (~> 0.4.2)
       xmlcanonicalizer (= 0.1.1)

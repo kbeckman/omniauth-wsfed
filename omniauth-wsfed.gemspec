@@ -5,10 +5,10 @@ Gem::Specification.new do |gem|
 
   gem.name          = "omniauth-wsfed"
   gem.version       = OmniAuth::WSFed::VERSION
-  gem.description   = %q{A WS-Federation and WS-Trust strategy for OmniAuth.}
-  gem.summary       = %q{A WS-Federation and WS-Trust strategy for OmniAuth.}
+  gem.summary       = %q{A WS-Federation + WS-Trust strategy for OmniAuth.}
+  gem.description   = %q{OmniAuth WS-Federation strategy enabling integration with Windows Azure Access Control Service (ACS), Active Directory Federation Services (ADFS) 2.0, custom Identity Providers built with Windows Identity Foundation (WIF) or any other Identity Provider supporting the WS-Federation protocol.}
 
-  gem.authors       = ["kbeckman"]
+  gem.authors       = ["Keith Beckman"]
   gem.email         = ["kbeckman.c4sc@gmail.com"]
   gem.homepage      = "https://github.com/kbeckman/omniauth-wsfed"
 
