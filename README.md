@@ -1,7 +1,5 @@
 # OmniAuth WS-Fed #
 
-#### This gem is currently under construction... Expect an official v1 release by the the end of July 2012. ####
-
 The OmniAuth-WSFed authentication strategy can be used with the following technologies
 under scenarios requiring the [WS-Federation protocol](﻿http://msdn.microsoft.com/en-us/library/bb498017.aspx)
 for authentication. These services are typically used for Identity Federation and Single
