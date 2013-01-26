@@ -16,9 +16,9 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'xmlcanonicalizer', '0.1.1'
   gem.add_runtime_dependency 'typhoeus', '~> 0.4.2'
 
-  gem.add_development_dependency 'rspec', '~> 2.10.0'
-  gem.add_development_dependency 'rake', '~> 0.9.2'
-  gem.add_development_dependency 'rack-test', '~> 0.6.1'
+  gem.add_development_dependency 'rspec', '>= 2.12.0'
+  gem.add_development_dependency 'rake', '>= 10.0.3'
+  gem.add_development_dependency 'rack-test', '>= 0.6.2'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
