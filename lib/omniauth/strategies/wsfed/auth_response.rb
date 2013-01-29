@@ -1,5 +1,6 @@
 require "time"
 require "hashie"
+require "rexml/xpath"
 
 module OmniAuth
   module Strategies
@@ -7,11 +8,15 @@ module OmniAuth
 
       class AuthResponse
 
+        WS_TRUST = "http://schemas.xmlsoap.org/ws/2005/02/trust"
+        WS_UTILITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+        WS_POLICY = "http://schemas.xmlsoap.org/ws/2004/09/policy"
+
         ASSERTION = "urn:oasis:names:tc:SAML:2.0:assertion"
         PROTOCOL  = "urn:oasis:names:tc:SAML:2.0:protocol"
         DSIG      = "http://www.w3.org/2000/09/xmldsig#"
 
-        attr_accessor :options, :response, :document, :settings
+        attr_accessor :options, :response, :settings
 
         def initialize(response, settings, options = {})
           raise ArgumentError.new("Response cannot be nil.") if response.nil?
@@ -20,26 +25,45 @@ module OmniAuth
           self.options  = options
           self.response = response
           self.settings = settings
-          self.document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
         end
 
-        def valid?
-          validate(soft = true)
+
+        # TODO: remove reference to SignedDocument (document) and move it to validation
+        # use response variable instead...
+        def document
+          @document ||= OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
         end
 
-        def validate!
-          validate(soft = false)
-        end
 
-        # The value of the user identifier as defined by the id_claim setting...
-        def name_id
-          @name_id ||= begin
-            attributes.has_key?(settings[:id_claim]) ? attributes.fetch(settings[:id_claim]) : nil
+        # WS-Trust Envelope and WS* Element Values
+
+        def audience
+          @audience ||= begin
+            applies_to = REXML::XPath.first(document, '//t:RequestSecurityTokenResponse/wsp:AppliesTo', { 't' => WS_TRUST, 'wsp' => WS_POLICY })
+            REXML::XPath.first(applies_to, '//EndpointReference/Address').text
           end
         end
 
-        # A hash of all the claims provided by the response.
-        def attributes
+        def created_at
+          Time.parse(REXML::XPath.first(wstrust_lifetime, '//wsu:Created', { 'wsu' => WS_UTILITY }).text)
+        end
+
+        def expires_at
+          Time.parse(REXML::XPath.first(wstrust_lifetime, '//wsu:Expires', { 'wsu' => WS_UTILITY }).text)
+        end
+
+
+        # SAML 2.0 Assertion [Token] Values
+        # Note: If/When future development warrants additional token types, these items should be refactored into a
+        # token abastraction...
+
+        def issuer
+          @issuer ||= begin
+            REXML::XPath.first(document, '//Assertion/Issuer').text
+          end
+        end
+
+        def claims
           @attr_statements ||= begin
             stmt_element = REXML::XPath.first(document, "//Assertion/AttributeStatement")
             return {} if stmt_element.nil?
@@ -60,23 +84,29 @@ module OmniAuth
             end
           end
         end
+        alias :attributes :claims
 
-        # When this user session should expire at latest
-        def session_expires_at
-          @expires_at ||= begin
-            node = xpath("/p:Response/a:Assertion/a:AuthnStatement")
-            parse_time(node, "SessionNotOnOrAfter")
+        # The value of the user identifier as defined by the id_claim configuration setting...
+        def name_id
+          @name_id ||= begin
+            claims.has_key?(settings[:id_claim]) ? claims.fetch(settings[:id_claim]) : nil
           end
         end
 
-        # Conditions (if any) for the assertion to run
-        def conditions
-          @conditions ||= begin
-            xpath("/p:Response/a:Assertion[@ID='#{signed_element_id}']/a:Conditions")
-          end
-        end
 
       private
+
+
+        # WS-Trust token lifetime element
+        def wstrust_lifetime
+          @wstrust_lifetime ||= begin
+            REXML::XPath.first(document, '//t:RequestSecurityTokenResponse/t:Lifetime', { 't' => WS_TRUST })
+          end
+        end
+
+
+
+
 
         def validation_error(message)
           raise OmniAuth::Strategies::WSFed::ValidationError.new(message)
@@ -136,16 +166,6 @@ module OmniAuth
           if node && node.attributes[attribute]
             Time.parse(node.attributes[attribute])
           end
-        end
-
-        #def strip(string)
-        #  return string unless string
-        #  string.gsub(/^\s+/, '').gsub(/\s+$/, '')
-        #end
-
-        def xpath(path)
-          #REXML::XPath.first(document, path, { "p" => PROTOCOL, "a" => ASSERTION })
-          REXML::XPath.first(document, path, { "saml" => ASSERTION })
         end
 
         def signed_element_id

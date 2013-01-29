@@ -39,6 +39,9 @@ module OmniAuth
           @name_id  = response.name_id
           @claims   = response.attributes
 
+          # TODO: Refactor this into the callback_validator...
+          return fail!(:invalid_ticket, OmniAuth::Strategies::WSFed::ValidationError('Invalid SAML Token') ) if  !response.valid?
+
           super
 
         rescue ArgumentError => e
