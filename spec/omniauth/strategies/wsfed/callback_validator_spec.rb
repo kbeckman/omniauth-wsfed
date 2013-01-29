@@ -21,8 +21,10 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
 
       auth_response.stub(:issuer).and_return(@wsfed_settings[:issuer])
       auth_response.stub(:audience).and_return(@wsfed_settings[:realm])
-      auth_response.stub(:attributes).and_return(@claims)
+      auth_response.stub(:claims).and_return(@claims)
       auth_response.stub(:name_id).and_return(@claims[@wsfed_settings[:id_claim]])
+      auth_response.stub(:created_at).and_return(Time.now.utc - 1) # 1 second ago
+      auth_response.stub(:expires_at).and_return(Time.now.utc + 300) # 5 minutes from now
     end
 
     it 'should pass validation with....' do
@@ -38,7 +40,8 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
 
         validator = described_class.new(auth_response, @wsfed_settings)
 
-        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError
+        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                          OmniAuth::Strategies::WSFed::CallbackValidator::ISSUER_MISMATCH
       end
 
       it 'should throw an exception when realm/audience do not match' do
@@ -46,16 +49,36 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
 
         validator = described_class.new(auth_response, @wsfed_settings)
 
-        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError
+        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                          OmniAuth::Strategies::WSFed::CallbackValidator::AUDIENCE_MISMATCH
+      end
+
+      it 'should throw an exception when the created_at timestamp is in the future' do
+        auth_response.stub(:created_at).and_return(Time.now.utc + 2)
+
+        validator = described_class.new(auth_response, @wsfed_settings)
+
+        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                          OmniAuth::Strategies::WSFed::CallbackValidator::FUTURE_CREATED_AT
+      end
+
+      it 'should throw an exception when the expires_at timestamp limit has been exceeded' do
+        auth_response.stub(:expires_at).and_return(Time.now.utc - 1)
+
+        validator = described_class.new(auth_response, @wsfed_settings)
+
+        lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                          OmniAuth::Strategies::WSFed::CallbackValidator::TOKEN_EXPIRED
       end
 
       it 'should throw an exception when claims are empty or nil' do
         [nil, {}].each do |val|
-          auth_response.stub(:attributes).and_return(val)
+          auth_response.stub(:claims).and_return(val)
 
           validator = described_class.new(auth_response, @wsfed_settings)
 
-          lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError
+          lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                            OmniAuth::Strategies::WSFed::CallbackValidator::NO_CLAIMS
         end
       end
 
@@ -65,7 +88,8 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
 
           validator = described_class.new(auth_response, @wsfed_settings)
 
-          lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError
+          lambda { validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
+                                                            OmniAuth::Strategies::WSFed::CallbackValidator::NO_USER_IDENTIFIER
         end
       end
 

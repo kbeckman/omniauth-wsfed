@@ -114,7 +114,6 @@ module OmniAuth
 
         def validate(soft = true)
           validate_response_state(soft) &&
-              validate_conditions(soft)     &&
               document.validate(get_fingerprint, soft)
         end
 
@@ -143,35 +142,6 @@ module OmniAuth
           end
         end
 
-        def validate_conditions(soft = true)
-          return true if conditions.nil?
-          return true if options[:skip_conditions]
-
-          if not_before = parse_time(conditions, "NotBefore")
-            if Time.now.utc < not_before
-              return soft ? false : validation_error("Current time is earlier than NotBefore condition")
-            end
-          end
-
-          if not_on_or_after = parse_time(conditions, "NotOnOrAfter")
-            if Time.now.utc >= not_on_or_after
-              return soft ? false : validation_error("Current time is on or after NotOnOrAfter condition")
-            end
-          end
-
-          true
-        end
-
-        def parse_time(node, attribute)
-          if node && node.attributes[attribute]
-            Time.parse(node.attributes[attribute])
-          end
-        end
-
-        def signed_element_id
-          doc_id = document.signed_element_id
-          doc_id[1, doc_id.size]
-        end
       end
 
     end
