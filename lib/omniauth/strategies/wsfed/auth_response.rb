@@ -104,44 +104,6 @@ module OmniAuth
           end
         end
 
-
-
-
-
-        def validation_error(message)
-          raise OmniAuth::Strategies::WSFed::ValidationError.new(message)
-        end
-
-        def validate(soft = true)
-          validate_response_state(soft) &&
-              document.validate(get_fingerprint, soft)
-        end
-
-        def validate_response_state(soft = true)
-          if response.empty?
-            return soft ? false : validation_error("Blank response")
-          end
-
-          if settings.nil?
-            return soft ? false : validation_error("No settings on response")
-          end
-
-          if settings[:idp_cert_fingerprint].nil? && settings[:idp_cert].nil?
-            return soft ? false : validation_error("No fingerprint or certificate on settings")
-          end
-
-          true
-        end
-
-        def get_fingerprint
-          if settings[:idp_cert_fingerprint]
-            settings[:idp_cert_fingerprint]
-          else
-            cert = OpenSSL::X509::Certificate.new(settings[:idp_cert].gsub(/^ +/, ''))
-            Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
-          end
-        end
-
       end
 
     end

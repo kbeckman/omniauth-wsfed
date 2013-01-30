@@ -31,6 +31,9 @@ module OmniAuth
       # Parse SAML token...
       def callback_phase
         begin
+          signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
+          signed_document.validate(get_fingerprint, false)
+
           response  = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'], options)
           validator = OmniAuth::Strategies::WSFed::CallbackValidator.new(response, options)
 
@@ -38,9 +41,6 @@ module OmniAuth
 
           @name_id  = response.name_id
           @claims   = response.attributes
-
-          # TODO: Refactor this into the callback_validator...
-          return fail!(:invalid_ticket, OmniAuth::Strategies::WSFed::ValidationError('Invalid SAML Token') ) if  !response.valid?
 
           super
 
@@ -58,6 +58,17 @@ module OmniAuth
       info { @claims }
 
       extra { { :wresult => request.params['wresult'] } }
+
+    private
+
+      def get_fingerprint
+        if options[:idp_cert_fingerprint]
+          options[:idp_cert_fingerprint]
+        else
+          cert = OpenSSL::X509::Certificate.new(options[:idp_cert].gsub(/^ +/, ''))
+          Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
+        end
+      end
 
     end
   end
