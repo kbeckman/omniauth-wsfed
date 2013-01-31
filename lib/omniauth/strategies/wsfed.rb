@@ -31,10 +31,12 @@ module OmniAuth
       # Parse SAML token...
       def callback_phase
         begin
-          signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
+          wsfed_callback = request.params['wresult']
+
+          signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(wsfed_callback)
           signed_document.validate(get_fingerprint, false)
 
-          response  = OmniAuth::Strategies::WSFed::AuthResponse.new(request.params['wresult'], options)
+          response  = OmniAuth::Strategies::WSFed::AuthResponse.new(wsfed_callback, options)
           validator = OmniAuth::Strategies::WSFed::CallbackValidator.new(response, options)
 
           validator.validate!
