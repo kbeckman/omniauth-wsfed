@@ -8,9 +8,9 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
 
     before(:each) do
       @wsfed_settings = {
-          :issuer   => "https://identity-wwf.accesscontrol.windows.net/",
-          :realm    => "http://rp.wwf.com/wsfed-sample",
-          :id_claim => "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+          :issuer_name  => "https://identity-wwf.accesscontrol.windows.net/",
+          :realm        => "http://rp.wwf.com/wsfed-sample",
+          :id_claim     => "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
       }
 
       @claims = {
@@ -19,7 +19,7 @@ describe OmniAuth::Strategies::WSFed::CallbackValidator do
         "http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider" => "http://sso.wwf.com"
       }
 
-      auth_response.stub(:issuer).and_return(@wsfed_settings[:issuer])
+      auth_response.stub(:issuer).and_return(@wsfed_settings[:issuer_name])
       auth_response.stub(:audience).and_return(@wsfed_settings[:realm])
       auth_response.stub(:claims).and_return(@claims)
       auth_response.stub(:name_id).and_return(@claims[@wsfed_settings[:id_claim]])

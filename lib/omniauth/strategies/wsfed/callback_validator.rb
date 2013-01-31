@@ -20,7 +20,7 @@ module OmniAuth
 
         def validate!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(ISSUER_MISMATCH) unless
-            auth_response.issuer == wsfed_settings[:issuer]
+            auth_response.issuer == wsfed_settings[:issuer_name]
 
           raise OmniAuth::Strategies::WSFed::ValidationError.new(AUDIENCE_MISMATCH) unless
               auth_response.audience == wsfed_settings[:realm]
