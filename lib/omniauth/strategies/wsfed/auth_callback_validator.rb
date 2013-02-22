@@ -2,7 +2,7 @@ module OmniAuth
   module Strategies
     class WSFed
 
-      class CallbackValidator
+      class AuthCallbackValidator
 
         attr_accessor :auth_callback, :wsfed_settings
 

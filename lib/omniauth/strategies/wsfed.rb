@@ -6,11 +6,11 @@ module OmniAuth
     class WSFed
       include OmniAuth::Strategy
 
-      autoload :AuthRequest,        'omniauth/strategies/wsfed/auth_request'
-      autoload :AuthCallback,       'omniauth/strategies/wsfed/auth_callback'
-      autoload :CallbackValidator,  'omniauth/strategies/wsfed/callback_validator'
-      autoload :ValidationError,    'omniauth/strategies/wsfed/validation_error'
-      autoload :XMLSecurity,        'omniauth/strategies/wsfed/xml_security'
+      autoload :AuthRequest,            'omniauth/strategies/wsfed/auth_request'
+      autoload :AuthCallback,           'omniauth/strategies/wsfed/auth_callback'
+      autoload :AuthCallbackValidator,  'omniauth/strategies/wsfed/auth_callback_validator'
+      autoload :ValidationError,        'omniauth/strategies/wsfed/validation_error'
+      autoload :XMLSecurity,            'omniauth/strategies/wsfed/xml_security'
 
       # Issues passive WS-Federation redirect for authentication...
       def request_phase
@@ -36,13 +36,13 @@ module OmniAuth
           signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(wsfed_callback)
           signed_document.validate(get_fingerprint, false)
 
-          response  = OmniAuth::Strategies::WSFed::AuthCallback.new(wsfed_callback, options)
-          validator = OmniAuth::Strategies::WSFed::CallbackValidator.new(response, options)
+          auth_callback   = OmniAuth::Strategies::WSFed::AuthCallback.new(wsfed_callback, options)
+          validator       = OmniAuth::Strategies::WSFed::AuthCallbackValidator.new(auth_callback, options)
 
           validator.validate!
 
-          @name_id  = response.name_id
-          @claims   = response.attributes
+          @name_id  = auth_callback.name_id
+          @claims   = auth_callback.attributes
 
           super
 
