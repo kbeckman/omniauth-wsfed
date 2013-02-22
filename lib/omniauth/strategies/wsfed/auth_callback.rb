@@ -6,7 +6,7 @@ module OmniAuth
   module Strategies
     class WSFed
 
-      class AuthResponse
+      class AuthCallback
 
         WS_TRUST = "http://schemas.xmlsoap.org/ws/2005/02/trust"
         WS_UTILITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"

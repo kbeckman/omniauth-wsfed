@@ -7,7 +7,7 @@ module OmniAuth
       include OmniAuth::Strategy
 
       autoload :AuthRequest,        'omniauth/strategies/wsfed/auth_request'
-      autoload :AuthResponse,       'omniauth/strategies/wsfed/auth_response'
+      autoload :AuthCallback,       'omniauth/strategies/wsfed/auth_callback'
       autoload :CallbackValidator,  'omniauth/strategies/wsfed/callback_validator'
       autoload :ValidationError,    'omniauth/strategies/wsfed/validation_error'
       autoload :XMLSecurity,        'omniauth/strategies/wsfed/xml_security'
@@ -36,7 +36,7 @@ module OmniAuth
           signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(wsfed_callback)
           signed_document.validate(get_fingerprint, false)
 
-          response  = OmniAuth::Strategies::WSFed::AuthResponse.new(wsfed_callback, options)
+          response  = OmniAuth::Strategies::WSFed::AuthCallback.new(wsfed_callback, options)
           validator = OmniAuth::Strategies::WSFed::CallbackValidator.new(response, options)
 
           validator.validate!

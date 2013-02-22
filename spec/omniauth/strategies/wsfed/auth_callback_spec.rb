@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe OmniAuth::Strategies::WSFed::AuthResponse do
+describe OmniAuth::Strategies::WSFed::AuthCallback do
 
   describe "Initialization" do
 
