@@ -1,6 +1,6 @@
-require "time"
-require "hashie"
-require "rexml/xpath"
+require 'time'
+require 'hashie'
+require 'rexml/xpath'
 
 module OmniAuth
   module Strategies
@@ -8,30 +8,26 @@ module OmniAuth
 
       class AuthCallback
 
-        WS_TRUST = "http://schemas.xmlsoap.org/ws/2005/02/trust"
-        WS_UTILITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-        WS_POLICY = "http://schemas.xmlsoap.org/ws/2004/09/policy"
+        WS_TRUST    = 'http://schemas.xmlsoap.org/ws/2005/02/trust'
+        WS_UTILITY  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+        WS_POLICY   = 'http://schemas.xmlsoap.org/ws/2004/09/policy'
 
-        ASSERTION = "urn:oasis:names:tc:SAML:2.0:assertion"
-        PROTOCOL  = "urn:oasis:names:tc:SAML:2.0:protocol"
-        DSIG      = "http://www.w3.org/2000/09/xmldsig#"
+        attr_accessor :options, :raw_callback, :settings
 
-        attr_accessor :options, :response, :settings
+        def initialize(raw_callback, settings, options = {})
+          raise ArgumentError.new('Response cannot be nil.') if raw_callback.nil?
+          raise ArgumentError.new('WSFed settings cannot be nil.') if settings.nil?
 
-        def initialize(response, settings, options = {})
-          raise ArgumentError.new("Response cannot be nil.") if response.nil?
-          raise ArgumentError.new("WSFed settings cannot be nil.") if settings.nil?
-
-          self.options  = options
-          self.response = response
-          self.settings = settings
+          self.options      = options
+          self.raw_callback = raw_callback
+          self.settings     = settings
         end
 
 
         # TODO: remove reference to SignedDocument (document) and move it to validation
         # use response variable instead...
         def document
-          @document ||= OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(response)
+          @document ||= OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(raw_callback)
         end
 
 
@@ -55,7 +51,7 @@ module OmniAuth
 
         # SAML 2.0 Assertion [Token] Values
         # Note: If/When future development warrants additional token types, these items should be refactored into a
-        # token abastraction...
+        # token abstraction...
 
         def issuer
           @issuer ||= begin
@@ -65,12 +61,12 @@ module OmniAuth
 
         def claims
           @attr_statements ||= begin
-            stmt_element = REXML::XPath.first(document, "//Assertion/AttributeStatement")
+            stmt_element = REXML::XPath.first(document, '//Assertion/AttributeStatement')
             return {} if stmt_element.nil?
 
             {}.tap do |result|
               stmt_element.elements.each do |attr_element|
-                name  = attr_element.attributes["Name"]
+                name  = attr_element.attributes['Name']
 
                 if attr_element.elements.count > 1
                   value = []
