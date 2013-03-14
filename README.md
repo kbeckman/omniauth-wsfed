@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/omniauth-wsfed.png)](http://badge.fury.io/rb/omniauth-wsfed)
 [![Code Climate](https://codeclimate.com/github/kbeckman/omniauth-wsfed.png)](https://codeclimate.com/github/kbeckman/omniauth-wsfed)
-[![Build Status](https://secure.travis-ci.org/kbeckman/omniauth-wsfed.png?branch=development)](http://travis-ci.org/kbeckman/omniauth-wsfed)
+[![Build Status](https://travis-ci.org/kbeckman/omniauth-wsfed.png?branch=development)](https://travis-ci.org/kbeckman/omniauth-wsfed)
 
 The OmniAuth-WSFed authentication strategy can be used with the following technologies
 under scenarios requiring the [WS-Federation protocol](﻿http://msdn.microsoft.com/en-us/library/bb498017.aspx)
