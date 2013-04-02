@@ -19,27 +19,49 @@ module OmniAuth
         end
 
         def validate!
+          validate_issuer!
+          validate_audience!
+          validate_created_at!
+          validate_token_expiration!
+          validate_claims!
+          validate_uid!
+
+          true
+        end
+
+
+        private
+
+        def validate_issuer!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(ISSUER_MISMATCH) unless
-            auth_callback.issuer == wsfed_settings[:issuer_name]
+              auth_callback.issuer == wsfed_settings[:issuer_name]
+        end
 
+        def validate_audience!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(AUDIENCE_MISMATCH) unless
-            auth_callback.audience == wsfed_settings[:realm]
+              auth_callback.audience == wsfed_settings[:realm]
+        end
 
+        def validate_created_at!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(FUTURE_CREATED_AT) unless
-            auth_callback.created_at < Time.now.utc
+              auth_callback.created_at < Time.now.utc
+        end
 
+        def validate_token_expiration!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(TOKEN_EXPIRED) unless
-            auth_callback.expires_at > Time.now.utc
+              auth_callback.expires_at > Time.now.utc
+        end
 
+        def validate_claims!
           if auth_callback.claims.nil? || auth_callback.claims.empty?
             raise OmniAuth::Strategies::WSFed::ValidationError.new(NO_CLAIMS)
           end
+        end
 
+        def validate_uid!
           if auth_callback.name_id.nil? || auth_callback.name_id.empty?
             raise OmniAuth::Strategies::WSFed::ValidationError.new(NO_USER_IDENTIFIER)
           end
-
-          true
         end
 
       end
