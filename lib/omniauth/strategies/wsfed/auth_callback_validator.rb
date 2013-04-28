@@ -29,9 +29,6 @@ module OmniAuth
           true
         end
 
-
-        private
-
         def validate_issuer!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(ISSUER_MISMATCH) unless
               auth_callback.issuer == wsfed_settings[:issuer_name]
