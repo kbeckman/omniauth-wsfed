@@ -8,7 +8,6 @@ module OmniAuth
 
         ISSUER_MISMATCH     = 'AuthN token issuer does not match configured issuer.'
         AUDIENCE_MISMATCH   = 'AuthN token audience does not match configured realm.'
-        FUTURE_CREATED_AT   = 'AuthN token created timestamp occurs in the future.'
         TOKEN_EXPIRED       = 'AuthN token has expired.'
         NO_CLAIMS           = 'AuthN token contains no claims.'
         NO_USER_IDENTIFIER  = 'AuthN token contains no user identifier. Verify that configured :id_claim setting is correct.'
@@ -21,7 +20,6 @@ module OmniAuth
         def validate!
           validate_issuer!
           validate_audience!
-          validate_created_at!
           validate_token_expiration!
           validate_claims!
           validate_uid!
@@ -37,11 +35,6 @@ module OmniAuth
         def validate_audience!
           raise OmniAuth::Strategies::WSFed::ValidationError.new(AUDIENCE_MISMATCH) unless
               auth_callback.audience == wsfed_settings[:realm]
-        end
-
-        def validate_created_at!
-          raise OmniAuth::Strategies::WSFed::ValidationError.new(FUTURE_CREATED_AT) unless
-              auth_callback.created_at < Time.now.utc
         end
 
         def validate_token_expiration!

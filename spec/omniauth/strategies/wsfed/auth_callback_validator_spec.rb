@@ -75,25 +75,6 @@ describe OmniAuth::Strategies::WSFed::AuthCallbackValidator do
 
     end
 
-    context 'having invalid (future) created_at timestamp' do
-
-      before(:each) do
-        auth_callback.stub(:created_at).and_return(Time.now.utc + 2)
-        @validator = described_class.new(auth_callback, @wsfed_settings)
-      end
-
-      it 'validate_created_at! should throw an exception' do
-        lambda { @validator.validate_created_at! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
-                                                                      OmniAuth::Strategies::WSFed::AuthCallbackValidator::FUTURE_CREATED_AT
-      end
-
-      it 'validate! should throw an exception' do
-        lambda { @validator.validate! }.should raise_error OmniAuth::Strategies::WSFed::ValidationError,
-                                                           OmniAuth::Strategies::WSFed::AuthCallbackValidator::FUTURE_CREATED_AT
-      end
-
-    end
-
     context 'having invalid (limit exceeded) expires_at' do
 
       before(:each) do
