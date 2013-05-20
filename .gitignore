@@ -3,6 +3,7 @@
 
 #RVM
 .rvmrc
+.ruby-version
 
 #Other
 .DS_Store
