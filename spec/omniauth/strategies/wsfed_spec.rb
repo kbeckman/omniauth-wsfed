@@ -10,13 +10,13 @@ describe OmniAuth::Strategies::WSFed, :type => :strategy do
   let(:auth_hash){ last_request.env['omniauth.auth'] }
   let(:wsfed_settings) do
     {
-        issuer: "https://c4sc.accesscontrol.windows.net.com/v2/wsfederation",
-        realm:  "http://c4sc.com/security_realm",
-        reply:  "http://rp.c4sc.com/auth/wsfed"
+        :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
+        :realm  => 'http://example.com/rp',
+        :reply  => 'http://example.com/auth/wsfed'
     }
   end
   let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_settings] }
-  let(:home_realm) { "http://identity.c4sc.com/trust" }
+  let(:home_realm) { 'http://identity.c4sc.com' }
 
 
   describe 'request_phase: GET /auth/wsfed' do
@@ -47,17 +47,17 @@ end
 describe OmniAuth::Strategies::WSFed, :type => :strategy do
   include OmniAuth::Test::StrategyTestCase
 
-  let(:home_realm_discovery) { "/auth/wsfed/home_realm_discovery" }
+  let(:home_realm_discovery) { '/auth/wsfed/home_realm_discovery' }
   let(:wsfed_settings) do
     {
-        issuer:                     "https://c4sc.accesscontrol.windows.net.com/v2/wsfederation",
-        realm:                      "http://c4sc.com/security_realm",
-        reply:                      "http://rp.c4sc.com/auth/wsfed",
-        home_realm_discovery_path:  home_realm_discovery
+        :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
+        :realm  => 'http://example.com/rp',
+        :reply  => 'http://example.com/auth/wsfed',
+        :home_realm_discovery_path => home_realm_discovery
     }
   end
   let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_settings] }
-  let(:home_realm) { "http://identity.c4sc.com/trust" }
+  let(:home_realm) { 'http://identity.c4sc.com' }
 
   context ':home_realm_discovery_path configured' do
 
@@ -74,6 +74,33 @@ describe OmniAuth::Strategies::WSFed, :type => :strategy do
       last_response.should be_redirect
       last_response.location.should include wsfed_settings[:issuer]
       last_response.location.should include "whr=#{ERB::Util::url_encode(home_realm)}"
+    end
+
+  end
+end
+
+describe OmniAuth::Strategies::WSFed, :type => :strategy do
+  include OmniAuth::Test::StrategyTestCase
+
+  let(:home_realm_discovery) { '/auth/wsfed/home_realm_discovery' }
+  let(:wsfed_settings) do
+    {
+        :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
+        :realm  => 'http://example.com/rp',
+        :reply  => 'http://example.com/auth/wsfed',
+        :home_realm_discovery_path => home_realm_discovery
+    }
+  end
+  let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_settings] }
+  let(:home_realm) { 'http://identity.c4sc.com' }
+
+  context 'invalid callbacks' do
+
+    it 'should redirect to failure route when the \'wresult\' parameter is nil'  do
+      post 'auth/wsfed/callback'
+
+      last_response.status.should   == 302
+      last_response.location.should == '/auth/failure?message=invalid_authn_token&strategy=wsfed'
     end
 
   end
