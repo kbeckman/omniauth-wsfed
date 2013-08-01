@@ -4,6 +4,7 @@
 #RVM
 .rvmrc
 .ruby-version
+.ruby-gemset
 
 #Other
 .DS_Store
