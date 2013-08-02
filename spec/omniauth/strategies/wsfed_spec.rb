@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-# Had to split these tests into two different classes because the OmniAuth::Test::StrategyTestCase only sets up one
-# instance of the strategy settings per spec description. In other words, any time you need to make changes to the
-# OmniAuth initialization settings, you need a new spec description to re-initialize the test strategy.
+# Had to split these tests into different classes because the OmniAuth::Test::StrategyTestCase only
+# sets up one instance of the strategy settings per spec description. In other words, any time you
+# need to make changes to the OmniAuth initialization settings, you need a new spec description to
+# re-initialize the test strategy.
 
 describe OmniAuth::Strategies::WSFed, :type => :strategy do
   include OmniAuth::Test::StrategyTestCase
 
-  let(:auth_hash){ last_request.env['omniauth.auth'] }
   let(:wsfed_settings) do
     {
         :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
@@ -47,13 +47,12 @@ end
 describe OmniAuth::Strategies::WSFed, :type => :strategy do
   include OmniAuth::Test::StrategyTestCase
 
-  let(:home_realm_discovery) { '/auth/wsfed/home_realm_discovery' }
   let(:wsfed_settings) do
     {
         :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
         :realm  => 'http://example.com/rp',
         :reply  => 'http://example.com/auth/wsfed',
-        :home_realm_discovery_path => home_realm_discovery
+        :home_realm_discovery_path => '/auth/wsfed/home_realm_discovery'
     }
   end
   let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_settings] }
@@ -65,7 +64,7 @@ describe OmniAuth::Strategies::WSFed, :type => :strategy do
       get '/auth/wsfed'
 
       last_response.should be_redirect
-      last_response.location.should == home_realm_discovery
+      last_response.location.should == wsfed_settings[:home_realm_discovery_path]
     end
 
     it 'should redirect to the IdP/FP Issuer URL and maintain [whr] param' do
