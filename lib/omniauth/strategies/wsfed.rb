@@ -31,8 +31,7 @@ module OmniAuth
       # Parse SAML token...
       def callback_phase
         begin
-          raise OmniAuth::Strategies::WSFed::ValidationError.new('AuthN token (wresult) missing in callback.') if
-              request.params['wresult'].nil? || request.params['wresult'].empty?
+          validate_callback_params(request)
 
           wsfed_callback = request.params['wresult']
 
@@ -72,6 +71,12 @@ module OmniAuth
         else
           cert = OpenSSL::X509::Certificate.new(options[:idp_cert].gsub(/^ +/, ''))
           Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(':')
+        end
+      end
+
+      def validate_callback_params(request)
+        if request.params['wresult'].nil? || request.params['wresult'].empty?
+          raise OmniAuth::Strategies::WSFed::ValidationError.new('AuthN token (wresult) missing in callback.')
         end
       end
 
