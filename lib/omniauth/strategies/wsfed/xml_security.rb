@@ -39,11 +39,13 @@ module OmniAuth
         class SignedDocument < REXML::Document
           DSIG = "http://www.w3.org/2000/09/xmldsig#"
 
-          attr_accessor :signed_element_id
+          attr_accessor :signed_element_id, :settings
 
-          def initialize(response)
+          def initialize(response, settings = {})
             super(response)
             extract_signed_element_id
+
+            self.settings = settings
           end
 
           def validate(idp_cert_fingerprint, soft = true)
@@ -80,9 +82,11 @@ module OmniAuth
             sig_element.remove
 
             # check digests
+            saml_version = settings[:saml_version]
             REXML::XPath.each(sig_element, "//ds:Reference", {"ds"=>DSIG}) do |ref|
               uri                           = ref.attributes.get_attribute("URI").value
-              hashed_element                = REXML::XPath.first(self, "//[@ID='#{uri[1,uri.size]}']")
+              id                            = saml_version == '1' ? 'AssertionID' : 'ID'
+              hashed_element                = REXML::XPath.first(self, "//[@#{id}='#{uri[1,uri.size]}']")
               canoner                       = XML::Util::XmlCanonicalizer.new(false, true)
               canoner.inclusive_namespaces  = inclusive_namespaces if canoner.respond_to?(:inclusive_namespaces) && !inclusive_namespaces.empty?
               canon_hashed_element          = canoner.canonicalize(hashed_element)
