@@ -94,6 +94,8 @@ posted. **Required**
 * `:id_claim` - Name of the authentication claim that you want to use as OmniAuth's
 **uid** property.
 
+* `:saml_version` - The version of SAML tokens. **Defaults to 2**.
+
 
 ## Authors and Credits ##
 
