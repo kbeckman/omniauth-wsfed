@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'xmlcanonicalizer',  '~> 0.1.2'
 
   gem.add_development_dependency 'rspec',     '>= 2.12.0'
-  gem.add_development_dependency 'rake',      '~>= 10.1.0'
+  gem.add_development_dependency 'rake',      '~> 10.1.0'
   gem.add_development_dependency 'rack-test', '>= 0.6.2'
 
   gem.files         = `git ls-files`.split($\)
