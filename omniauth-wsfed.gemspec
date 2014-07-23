@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ['Keith Beckman']
   gem.email         = ['kbeckman.c4sc@gmail.com']
   gem.homepage      = 'https://github.com/kbeckman/omniauth-wsfed'
+  gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'omniauth', '~> 1.1.0'
   gem.add_runtime_dependency 'xmlcanonicalizer', '0.1.1'
