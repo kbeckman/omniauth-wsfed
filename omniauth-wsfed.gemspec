@@ -11,13 +11,14 @@ Gem::Specification.new do |gem|
   gem.authors       = ['Keith Beckman']
   gem.email         = ['kbeckman.c4sc@gmail.com']
   gem.homepage      = 'https://github.com/kbeckman/omniauth-wsfed'
+  gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'omniauth', '~> 1.1.0'
-  gem.add_runtime_dependency 'xmlcanonicalizer', '0.1.1'
+  gem.add_runtime_dependency 'omniauth',          '~> 1.2', '>= 1.2.2'
+  gem.add_runtime_dependency 'xmlcanonicalizer',  '~> 0.1', '>= 0.1.2'
 
-  gem.add_development_dependency 'rspec', '>= 2.12.0'
-  gem.add_development_dependency 'rake', '>= 10.0.3'
-  gem.add_development_dependency 'rack-test', '>= 0.6.2'
+  gem.add_development_dependency 'rspec',     '~> 2.12',  '>= 2.12.0'
+  gem.add_development_dependency 'rake',      '~> 10.1',  '>= 10.1.0'
+  gem.add_development_dependency 'rack-test', '~> 0.6',   '>= 0.6.2'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
