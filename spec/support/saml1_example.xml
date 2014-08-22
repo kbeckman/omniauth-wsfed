@@ -1,0 +1,66 @@
+<t:RequestSecurityTokenResponse xmlns:t="http://schemas.xmlsoap.org/ws/2005/02/trust">
+  <t:Lifetime>
+    <wsu:Created xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">2014-06-27T19:45:38.263Z</wsu:Created>
+    <wsu:Expires xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">2014-06-27T20:45:38.263Z</wsu:Expires>
+  </t:Lifetime>
+  <wsp:AppliesTo xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+    <wsa:EndpointReference xmlns:wsa="http://www.w3.org/2005/08/addressing">
+      <wsa:Address>http://rp.coding4streetcred.com/sample</wsa:Address>
+    </wsa:EndpointReference>
+  </wsp:AppliesTo>
+  <t:RequestedSecurityToken>
+    <saml:Assertion MajorVersion="1" MinorVersion="1" AssertionID="_fa0de02b-b5a1-49c5-a8c0-4b391295a789" Issuer="https://c4sc-identity.accesscontrol.windows.net/" IssueInstant="2014-06-27T19:45:38.263Z" xmlns:saml="urn:oasis:names:tc:SAML:1.0:assertion">
+      <saml:Conditions NotBefore="2014-06-27T19:45:38.263Z" NotOnOrAfter="2014-06-27T20:45:38.263Z">
+	<saml:AudienceRestrictionCondition>
+	  <saml:Audience>https://c4sc-identity.accesscontrol.windows.net</saml:Audience>
+	</saml:AudienceRestrictionCondition>
+      </saml:Conditions>
+      <saml:AttributeStatement>
+	<saml:Subject>
+	  <saml:SubjectConfirmation>
+	    <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml:ConfirmationMethod>
+	  </saml:SubjectConfirmation>
+	</saml:Subject>
+	<saml:Attribute AttributeName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" AttributeNamespace="http://schemas.xmlsoap.org/ws/2005/05/identity/claims">
+	  <saml:AttributeValue>kbeckman.c4sc@gmail.com</saml:AttributeValue>
+	</saml:Attribute>
+	<saml:Attribute AttributeName="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name" AttributeNamespace="http://schemas.microsoft.com/ws/2008/06/identity/claims">
+	  <saml:AttributeValue>kbeckman.c4sc</saml:AttributeValue>
+	</saml:Attribute>
+	<saml:Attribute AttributeName="http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider" AttributeNamespace="http://schemas.xmlsoap.org/ws/2005/05/identity/claims">
+	  <saml:AttributeValue>http://identity.c4sc.com/trust/</saml:AttributeValue>
+	</saml:Attribute>
+      </saml:AttributeStatement>
+      <saml:AuthenticationStatement AuthenticationMethod="urn:oasis:names:tc:SAML:1.0:am:password" AuthenticationInstant="2014-06-27T19:45:38.232Z">
+	<saml:Subject>
+	  <saml:SubjectConfirmation>
+	    <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml:ConfirmationMethod>
+	  </saml:SubjectConfirmation>
+	</saml:Subject>
+      </saml:AuthenticationStatement>
+      <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+	<ds:SignedInfo>
+	  <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+	  <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+	  <ds:Reference URI="#_fa0de02b-b5a1-49c5-a8c0-4b391295a789">
+	    <ds:Transforms>
+	      <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+	      <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+	    </ds:Transforms>
+	    <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+	    <ds:DigestValue>bdwpOR25Tiw03Y5gZsz/NDSrN2T1XAEUQl9/B2aDVjs=</ds:DigestValue>
+	  </ds:Reference>
+	</ds:SignedInfo>
+	<ds:SignatureValue>O3dJ5YtFIJJHk8SKAqdI2goSJUj7/oZebGwrm5yjVz8WT9TdHfJT2e/rygKLz9MBujZoZ13oGaVq6NVJLvmvR+IrKsUIuUeXwk4X2UexYxJL9VGZD6RnXR+p0Jne+jGUIlVOb2zMr29Ew27wLfnw3za+Zf5ravQZ/bv3LoL/LFIYFb7iR4XlJ5bjlMhO41euUp/6NTntIC90utugpjqcPryxNbIto6nk3w57IrKmw9rFpRJudoXbw7BsA3t69dmzu2MQzjILbFcfmkUgtEXDQyGM/ziXqxNFEGNHkycEsO37NO4/t5Hk1zPufBbbhSm+5K6tVqZ2Nl1e5yNciBwo6g==</ds:SignatureValue>
+	<KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+	  <X509Data>
+	    <X509Certificate>MIIDHDCCAgSgAwIBAgIQXMOBsrQ1QJpNmYFiiW5+PjANBgkqhkiG9w0BAQUFADAyMTAwLgYDVQQDEydjNHNjLWlkZW50aXR5LmFjY2Vzc2NvbnRyb2wud2luZG93cy5uZXQwHhcNMTIwNjI5MjAzNTA2WhcNMTMwNjMwMDIzNTA2WjAyMTAwLgYDVQQDEydjNHNjLWlkZW50aXR5LmFjY2Vzc2NvbnRyb2wud2luZG93cy5uZXQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCrieSwMYpW73fJtHiBw1yQFWcFZwvDbltFfdb4xzC+MuC8KU/QJzKGBzxixwmvTUKTbH4W4gKNzi7+/gGk9my1UFnDLsnJBooGjx6lCXMU9HoOQA0tXVGkyYeD11Lb2KYWoivvGFI6dun84JY1n1hbAnuyqr+8VUfKpBk3bO6s3xLf2eojAHKhUiw2E+ZBFZWqlTMtSoNupe8I4Zs5Kkp5Xe1hrDjCzHWTHRf880y8f6KOvieQuGO2a2dBSYJVY3IHr1cLlk/o9Dwks4zSjYDABE8NDKer7aq2pnXl0/0XeXeYsDsZFrwfuRtf06pqGgMuqo1aFRiQ2+gm4naZn7D3AgMBAAGjLjAsMAsGA1UdDwQEAwIE8DAdBgNVHQ4EFgQUIBxPC4SJIAWTt6Q4htDcvHDgatAwDQYJKoZIhvcNAQEFBQADggEBAB2RNPpJMNotdKMKtQkV/tEhttOOq+bXlMa42UQu6r+ikgJ6WcSecBxOs4KHw3lj7wO0l8CIOfvXy5KBePLQsUuk8tWCdKdpa+7uuGntIHdlTAvjlcVhXXAQQvyS+wUbnwj8rCN85e76EWMWCAVXzqwMURt5Rzmb+SdU40hRi+7u+HmZaQW5kDXD3CIm+1eOU7oyWpz6Ltx1DEJ88qt4xB2e6IGQUTdvq2jUnyzC1f9jdtRtZ3LiiVkA29rfRROJQb/PeEinUON0hP7/6VS9LZPL4vB1EIOBNahY1V4/75Hb+NGzb05w71hMUiJK2eu8w1WwqcRqUlu7GI921Od1oFQ=</X509Certificate>
+	  </X509Data>
+	</KeyInfo>
+      </ds:Signature>
+    </saml:Assertion>
+  </t:RequestedSecurityToken>
+  <t:TokenType>urn:oasis:names:tc:SAML:1.0:assertion</t:TokenType>
+  <t:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</t:RequestType>
+  <t:KeyType>http://schemas.xmlsoap.org/ws/2005/05/identity/NoProofKey</t:KeyType>
+</t:RequestSecurityTokenResponse>
