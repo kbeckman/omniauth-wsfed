@@ -72,10 +72,11 @@ module OmniAuth
                   value = []
                   attr_element.elements.each { |element| value << element.text }
                 else
-                  value = attr_element.elements.first.text.lstrip.rstrip
+                  value = attr_element.elements.first.text
+                  value = value.lstrip.rstrip if !value.nil?
                 end
 
-                result[name] = value
+                result[name] = value if !value.nil?
               end
             end
           end
