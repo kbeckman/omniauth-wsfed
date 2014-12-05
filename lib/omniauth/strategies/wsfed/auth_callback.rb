@@ -67,7 +67,7 @@ module OmniAuth
 
         def token
           @token ||= begin
-            case settings[:saml_version]
+            case settings[:saml_version].to_s
             when '1'
               SAML1Token.new(document)
             else
