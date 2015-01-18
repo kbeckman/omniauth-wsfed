@@ -36,15 +36,12 @@ describe OmniAuth::Strategies::WSFed::AuthCallback do
         auth_callback.expires_at.should == Time.parse('2012-06-29T21:17:14.766Z')
       end
 
+    end
+
+    shared_examples_for 'SAML token' do
       it 'should extract the token audience' do
         auth_callback.audience.should == 'http://rp.coding4streetcred.com/sample'
       end
-
-    end
-
-    context 'SAML 2.0 Assertion [Token] Values' do
-
-      let(:auth_callback) { described_class.new(load_support_xml(:acs_example), @wsfed_settings) }
 
       it 'should extract the issuer' do
         auth_callback.issuer.should == 'https://c4sc-identity.accesscontrol.windows.net/'
@@ -59,6 +56,20 @@ describe OmniAuth::Strategies::WSFed::AuthCallback do
 
         auth_callback.attributes.should == expected_claims
       end
+    end
+
+    context 'SAML 1.0 Assertion [Token] Values' do
+
+      let(:auth_callback) { described_class.new(load_support_xml(:saml1_example), @wsfed_settings.merge(saml_version: '1')) }
+
+      it_behaves_like 'SAML token'
+    end
+
+    context 'SAML 2.0 Assertion [Token] Values' do
+
+      let(:auth_callback) { described_class.new(load_support_xml(:acs_example), @wsfed_settings) }
+
+      it_behaves_like 'SAML token'
 
       it 'should load the proper value from various id_claim settings' do
         id_claims = [

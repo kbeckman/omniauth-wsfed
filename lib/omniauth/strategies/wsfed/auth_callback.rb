@@ -8,9 +8,7 @@ module OmniAuth
 
       class AuthCallback
 
-        WS_TRUST    = 'http://schemas.xmlsoap.org/ws/2005/02/trust'
         WS_UTILITY  = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
-        WS_POLICY   = 'http://schemas.xmlsoap.org/ws/2004/09/policy'
 
         attr_accessor :options, :raw_callback, :settings
 
@@ -27,17 +25,14 @@ module OmniAuth
         # TODO: remove reference to SignedDocument (document) and move it to validation
         # use response variable instead...
         def document
-          @document ||= OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(raw_callback)
+          @document ||= OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(raw_callback, settings)
         end
 
 
         # WS-Trust Envelope and WS* Element Values
 
         def audience
-          @audience ||= begin
-            applies_to = REXML::XPath.first(document, '//t:RequestSecurityTokenResponse/wsp:AppliesTo', { 't' => WS_TRUST, 'wsp' => WS_POLICY })
-            REXML::XPath.first(applies_to, '//EndpointReference/Address').text
-          end
+          @audience ||= token.audience
         end
 
         def created_at
@@ -49,36 +44,14 @@ module OmniAuth
         end
 
 
-        # SAML 2.0 Assertion [Token] Values
-        # Note: If/When future development warrants additional token types, these items should be refactored into a
-        # token abstraction...
+        # Token Values
 
         def issuer
-          @issuer ||= begin
-            REXML::XPath.first(document, '//Assertion/Issuer').text
-          end
+          @issuer ||= token.issuer
         end
 
         def claims
-          @attr_statements ||= begin
-            stmt_element = REXML::XPath.first(document, '//Assertion/AttributeStatement')
-            return {} if stmt_element.nil?
-
-            {}.tap do |result|
-              stmt_element.elements.each do |attr_element|
-                name  = attr_element.attributes['Name']
-
-                if attr_element.elements.count > 1
-                  value = []
-                  attr_element.elements.each { |element| value << element.text }
-                else
-                  value = attr_element.elements.first.text.lstrip.rstrip
-                end
-
-                result[name] = value
-              end
-            end
-          end
+          @claims ||= token.claims
         end
         alias :attributes :claims
 
@@ -91,6 +64,17 @@ module OmniAuth
 
 
       private
+
+        def token
+          @token ||= begin
+            case settings[:saml_version].to_s
+            when '1'
+              SAML1Token.new(document)
+            else
+              SAML2Token.new(document)
+            end
+          end
+        end
 
 
         # WS-Trust token lifetime element
