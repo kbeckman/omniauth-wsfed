@@ -9,8 +9,13 @@ module OmniAuth
       autoload :AuthRequest,            'omniauth/strategies/wsfed/auth_request'
       autoload :AuthCallback,           'omniauth/strategies/wsfed/auth_callback'
       autoload :AuthCallbackValidator,  'omniauth/strategies/wsfed/auth_callback_validator'
+      autoload :SAML2Token,             'omniauth/strategies/wsfed/saml_2_token'
+      autoload :SAML1Token,             'omniauth/strategies/wsfed/saml_1_token'
       autoload :ValidationError,        'omniauth/strategies/wsfed/validation_error'
       autoload :XMLSecurity,            'omniauth/strategies/wsfed/xml_security'
+
+      WS_TRUST    = 'http://schemas.xmlsoap.org/ws/2005/02/trust'
+      WS_POLICY   = 'http://schemas.xmlsoap.org/ws/2004/09/policy'
 
       # Issues passive WS-Federation redirect for authentication...
       def request_phase
@@ -25,7 +30,7 @@ module OmniAuth
 
           wsfed_callback = request.params['wresult']
 
-          signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(wsfed_callback)
+          signed_document = OmniAuth::Strategies::WSFed::XMLSecurity::SignedDocument.new(wsfed_callback, options)
           signed_document.validate(get_fingerprint, false)
 
           auth_callback   = OmniAuth::Strategies::WSFed::AuthCallback.new(wsfed_callback, options)
