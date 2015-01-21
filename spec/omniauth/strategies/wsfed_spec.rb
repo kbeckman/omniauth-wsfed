@@ -105,4 +105,26 @@ describe OmniAuth::Strategies::WSFed, :type => :strategy do
   end
 end
 
+describe OmniAuth::Strategies::WSFed, :type => :strategy do
+  include OmniAuth::Test::StrategyTestCase
 
+  let(:home_realm_discovery) { '/auth/wsfed/home_realm_discovery' }
+  let(:wsfed_settings) do
+    {
+      :issuer => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
+      :realm  => 'http://example.com/rp',
+    }
+  end
+  let(:strategy) { [OmniAuth::Strategies::WSFed, wsfed_settings] }
+  let(:home_realm) { 'http://identity.c4sc.com' }
+
+  describe 'request_phase: GET /auth/wsfed' do
+    context 'without :reply setting' do
+      it 'should use the default callback_url'  do
+        get 'auth/wsfed'
+        last_response.status.should   == 302
+        last_response.location.should include("wreply=http%3A%2F%2Fexample.org%2Fauth%2Fwsfed%2Fcallback")
+      end
+    end
+  end
+end
