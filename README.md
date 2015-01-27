@@ -89,7 +89,7 @@ relationship. This option or `:idp_cert` must be present.
 IdP must issue a secure token. **Required**
 
 * `:reply` - The reply-to URL in your application for which a WSFed response should be
-posted. **Required**
+posted. Defaults to the OmniAuth callback URL. **Optional**
 
 * `:id_claim` - Name of the authentication claim that you want to use as OmniAuth's
 **uid** property.
