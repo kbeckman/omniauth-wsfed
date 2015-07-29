@@ -11,7 +11,7 @@ module OmniAuth
 
         def audience
           applies_to = REXML::XPath.first(document, '//t:RequestSecurityTokenResponse/wsp:AppliesTo', { 't' => WS_TRUST, 'wsp' => WS_POLICY })
-          REXML::XPath.first(applies_to, '//EndpointReference/Address').text
+          REXML::XPath.first(applies_to, '//wsa:EndpointReference/wsa:Address', {'wsa' => WS_ADDRESSING }).text
         end
 
         def issuer
