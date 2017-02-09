@@ -100,8 +100,10 @@ module OmniAuth
             end
 
             # verify signature
-            canoner                 = XML::Util::XmlCanonicalizer.new(false, true)
             signed_info_element     = REXML::XPath.first(sig_element, "//ds:SignedInfo", {"ds"=>DSIG})
+            signed_info_element.attributes['xmlns'] = DSIG
+
+            canoner                 = XML::Util::XmlCanonicalizer.new(false, true)
             canon_string            = canoner.canonicalize(signed_info_element)
 
             base64_signature        = REXML::XPath.first(sig_element, "//ds:SignatureValue", {"ds"=>DSIG}).text
