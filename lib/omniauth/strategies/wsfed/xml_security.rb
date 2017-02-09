@@ -90,9 +90,9 @@ module OmniAuth
               canoner                       = XML::Util::XmlCanonicalizer.new(false, true)
               canoner.inclusive_namespaces  = inclusive_namespaces if canoner.respond_to?(:inclusive_namespaces) && !inclusive_namespaces.empty?
               canon_hashed_element          = canoner.canonicalize(hashed_element)
-	            digest_algorithm              = algorithm(REXML::XPath.first(ref, "//ds:DigestMethod"))
+              digest_algorithm              = algorithm(REXML::XPath.first(ref, "//ds:DigestMethod", {"ds"=>DSIG}))
               hash                          = Base64.encode64(digest_algorithm.digest(canon_hashed_element)).chomp
-              digest_value                  = REXML::XPath.first(ref, "//ds:DigestValue", {"ds"=>"http://www.w3.org/2000/09/xmldsig#"}).text
+              digest_value                  = REXML::XPath.first(ref, "//ds:DigestValue", {"ds"=>DSIG}).text
 
               unless digests_match?(hash, digest_value)
                 return soft ? false : (raise OmniAuth::Strategies::WSFed::ValidationError.new("Digest mismatch"))
