@@ -1,17 +1,31 @@
+dist: trusty
+sudo: false
+
+before_install: gem update bundler
+cache: bundler
+
+env:
+  global:
+    - JRUBY_OPTS="$JRUBY_OPTS --debug"
+
 language: ruby
+
 rvm:
-  - 1.9.2
   - 1.9.3
   - 2.0.0
   - 2.1
+  - 2.2.6
+  - 2.3.3
+  - 2.4.0
   - ruby-head
-  - rbx-2
-  - jruby-19mode
+  - rbx
+  - jruby-9
   - jruby-head
-script: bundle exec rspec spec
+
 matrix:
   allow_failures:
-    - rvm: ruby-head
-    - rvm: rbx-2
+    - rvm: rbx
     - rvm: jruby-head
   fast_finish: true
+
+script: bundle exec rspec spec
