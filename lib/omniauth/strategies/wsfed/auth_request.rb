@@ -1,12 +1,7 @@
-require 'erb'
-
 module OmniAuth
   module Strategies
     class WSFed
-
       class AuthRequest
-        include ERB::Util
-
         SIGNIN_PARAM = 'wsignin1.0'
 
         attr_reader :strategy_settings, :args
@@ -27,23 +22,23 @@ module OmniAuth
         end
 
         def wsfed_signin_request
-          wa      = SIGNIN_PARAM
-          wtrealm = url_encode(strategy_settings[:realm])
-          wreply  = url_encode(strategy_settings[:reply])
-          wct     = url_encode(Time.now.utc)
-          whr     = url_encode(args[:whr])
+          issuer_url_new_params = {
+            wa:      SIGNIN_PARAM,
+            wtrealm: strategy_settings[:realm],
+            wreply:  strategy_settings[:reply],
+            wct:     Time.now.utc,
+            wctx:    nil,
+          }
 
-          query_string = "?wa=#{wa}&wtrealm=#{wtrealm}&wreply=#{wreply}&wctx=#{}&wct=#{wct}"
+          new_issuer_params[:whr] = args[:whr] if args[:whr].present?
 
-          unless whr.nil? or whr.empty?
-            query_string = "#{query_string}&whr=#{whr}"
-          end
+          issuer_url        = URI.parse(strategy_settings[:issuer])
+          issuer_url_params = issuer_url.query.present? ? Hash[CGI.parse(issuer_url.query).map{ |key,values| [ key.to_sym, values[0] || true ] } ] : {}
+          issuer_url.query  = URI.encode_www_form(issuer_url_params.merge(issuer_url_new_params))
 
-          strategy_settings[:issuer] + query_string
+          issuer_url.to_s
         end
-
       end
-
     end
   end
 end
