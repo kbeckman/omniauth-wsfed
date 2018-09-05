@@ -32,11 +32,16 @@ module OmniAuth
           wreply  = url_encode(strategy_settings[:reply])
           wct     = url_encode(Time.now.utc)
           whr     = url_encode(args[:whr])
+          wfresh  = url_encode(strategy_settings[:wfresh])
 
           query_string = "?wa=#{wa}&wtrealm=#{wtrealm}&wreply=#{wreply}&wctx=#{}&wct=#{wct}"
 
           unless whr.nil? or whr.empty?
             query_string = "#{query_string}&whr=#{whr}"
+          end
+
+          unless wfresh.nil? or wfresh.empty?
+            query_string = "#{query_string}&wfresh=#{wfresh}"
           end
 
           strategy_settings[:issuer] + query_string
