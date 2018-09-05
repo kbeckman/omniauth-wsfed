@@ -96,6 +96,7 @@ posted. Defaults to the OmniAuth callback URL. **Optional**
 
 * `:saml_version` - The version of SAML tokens. **Defaults to 2**.
 
+* `:wfresh` - Indicates the freshness requirements (the maximum authentication age in minutes). **Optional**.
 
 ## Authors and Credits ##
 

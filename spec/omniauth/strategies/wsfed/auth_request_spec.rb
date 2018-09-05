@@ -8,7 +8,8 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
         :issuer                     => 'https://c4sc.accesscontrol.windows.net.com/v2/wsfederation',
         :realm                      => 'http://c4sc.com/security_realm',
         :reply                      => 'http://rp.c4sc.com/auth/wsfed',
-        :home_realm_discovery_path  => 'auth/home_realm_discovery'
+        :home_realm_discovery_path  => 'auth/home_realm_discovery',
+        :wfresh                     => 0
     }
   end
 
@@ -83,6 +84,10 @@ describe OmniAuth::Strategies::WSFed::AuthRequest do
       Time.now.stub(:utc).and_return(time)
 
       request.wsfed_signin_request.should include "wct=#{ERB::Util.url_encode(time)}"
+    end
+
+    it 'should include the freshness param [wfresh]' do
+      request.wsfed_signin_request.should include "wfresh=0"
     end
 
     describe 'Url-Encoded Home Realm Parameter [whr]' do
