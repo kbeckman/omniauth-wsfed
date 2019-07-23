@@ -85,8 +85,8 @@ module OmniAuth
             saml_version = settings[:saml_version]
             REXML::XPath.each(sig_element, "//ds:Reference", {"ds"=>DSIG}) do |ref|
               uri                           = ref.attributes.get_attribute("URI").value
-              hashed_element                = REXML::XPath.first(self, "//[@ID='#{uri[1,uri.size]}']") ||
-                                              REXML::XPath.first(self, "//[@AssertionID='#{uri[1,uri.size]}']")
+              hashed_element                = REXML::XPath.first(self, "//*[@ID='#{uri[1,uri.size]}']") ||
+                                              REXML::XPath.first(self, "//*[@AssertionID='#{uri[1,uri.size]}']")
               canoner                       = XML::Util::XmlCanonicalizer.new(false, true)
               canoner.inclusive_namespaces  = inclusive_namespaces if canoner.respond_to?(:inclusive_namespaces) && !inclusive_namespaces.empty?
               canon_hashed_element          = canoner.canonicalize(hashed_element)
